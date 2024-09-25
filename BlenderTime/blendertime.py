@@ -1,7 +1,9 @@
 import bpy,time,os,atexit,struct
 
 starttime = time.time()
+prevfile = ""
 opentime = 1
+filetime = 0.0
 uptime = 0.0
 
 def commit():
@@ -11,6 +13,14 @@ def commit():
     f.close()
 
 atexit.register(commit)
+
+def commitft():
+    pass
+
+def initfile():
+    pass
+    
+bpy.app.handlers.load_post.append(initfile)
 
 def hms(num):
     return num//3600,(num%3600)//60,(num%3600)%60
@@ -59,6 +69,8 @@ class ClockPanel(bpy.types.Panel):
         layout.label(text="Total Time: " + str(uhour) + ":" + str(umin) + ":" + str(usec))
         uhour,umin,usec = hms(int(time.time()-starttime))
         layout.label(text="Uptime: " + str(uhour) + ":" + str(umin) + ":" + str(usec))
+        if(bpy.data.filepath):
+            layout.label(text="Current File: ")
         row = layout.row()
         row.operator(UPDOperator.bl_idname,text="Update",icon="TIME")
         row.operator(CMTOperator.bl_idname,text="Commit (AUTO on Close)",icon="DISK_DRIVE")
